@@ -40,7 +40,7 @@ const Index = () => {
             </Badge>
             
             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-6 leading-tight">
-              Lovable
+              Page.ai
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
@@ -186,7 +186,7 @@ const Index = () => {
             Pronto para Criar sua Primeira Landing Page?
           </h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Junte-se a milhares de empreendedores que já usam o Lovable para gerar páginas que convertem
+            Junte-se a milhares de empreendedores que já usam o Page.ai para gerar páginas que convertem
           </p>
           <Button 
             onClick={handleStartClick}
@@ -205,7 +205,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
-              <h3 className="text-2xl font-bold mb-4">Lovable</h3>
+              <h3 className="text-2xl font-bold mb-4">Page.ai</h3>
               <p className="text-gray-400 mb-4 max-w-md">
                 A forma mais rápida e inteligente de criar landing pages profissionais que convertem visitantes em clientes.
               </p>
@@ -230,7 +230,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Lovable. Todos os direitos reservados.</p>
+            <p>&copy; 2024 Page.ai. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>

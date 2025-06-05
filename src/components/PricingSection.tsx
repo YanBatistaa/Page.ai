@@ -10,7 +10,7 @@ const PricingSection = () => {
       name: "Gratuito",
       price: "R$ 0",
       period: "/mês",
-      description: "Perfeito para testar o Lovable",
+      description: "Perfeito para testar o Page.ai",
       features: [
         "1 landing page por mês",
         "Todos os 4 estilos disponíveis",
@@ -21,7 +21,8 @@ const PricingSection = () => {
       buttonText: "Começar Grátis",
       buttonVariant: "outline" as const,
       popular: false,
-      icon: <Zap className="w-6 h-6" />
+      icon: <Zap className="w-6 h-6" />,
+      paymentUrl: null
     },
     {
       name: "Pro",
@@ -42,9 +43,17 @@ const PricingSection = () => {
       buttonText: "Começar Pro",
       buttonVariant: "default" as const,
       popular: true,
-      icon: <Crown className="w-6 h-6" />
+      icon: <Crown className="w-6 h-6" />,
+      paymentUrls: {
+        monthly: "https://invoice.infinitepay.io/plans/yanbatista-dev/5ecef2DJDn",
+        yearly: "https://invoice.infinitepay.io/plans/yanbatista-dev/cxPMpuXbn"
+      }
     }
   ];
+
+  const handlePayment = (paymentUrl: string) => {
+    window.open(paymentUrl, '_blank');
+  };
 
   return (
     <section className="py-20 bg-white">
@@ -108,16 +117,39 @@ const PricingSection = () => {
                   ))}
                 </ul>
                 
-                <Button 
-                  variant={plan.buttonVariant}
-                  className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
-                    plan.popular 
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105' 
-                      : 'border-2 border-blue-200 text-blue-600 hover:bg-blue-50'
-                  }`}
-                >
-                  {plan.buttonText}
-                </Button>
+                {plan.paymentUrls ? (
+                  <div className="space-y-3">
+                    <Button 
+                      onClick={() => handlePayment(plan.paymentUrls.monthly)}
+                      variant={plan.buttonVariant}
+                      className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
+                        plan.popular 
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105' 
+                          : 'border-2 border-blue-200 text-blue-600 hover:bg-blue-50'
+                      }`}
+                    >
+                      Pagar Mensalmente - R$ 29
+                    </Button>
+                    <Button 
+                      onClick={() => handlePayment(plan.paymentUrls.yearly)}
+                      variant="outline"
+                      className="w-full py-3 text-lg font-semibold border-2 border-green-500 text-green-600 hover:bg-green-50 transition-all duration-300"
+                    >
+                      Pagar Anualmente - R$ 290
+                    </Button>
+                  </div>
+                ) : (
+                  <Button 
+                    variant={plan.buttonVariant}
+                    className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
+                      plan.popular 
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105' 
+                        : 'border-2 border-blue-200 text-blue-600 hover:bg-blue-50'
+                    }`}
+                  >
+                    {plan.buttonText}
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}
