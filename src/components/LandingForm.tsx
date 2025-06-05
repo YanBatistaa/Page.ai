@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { generateLandingPage } from "@/utils/pageGenerator";
 
 interface FormData {
   productName: string;
@@ -23,7 +23,7 @@ interface FormData {
 }
 
 interface LandingFormProps {
-  onComplete: (data: FormData) => void;
+  onComplete: (data: FormData, generatedPage: any) => void;
 }
 
 const LandingForm = ({ onComplete }: LandingFormProps) => {
@@ -69,11 +69,23 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
 
   const handleSubmit = () => {
     console.log('Submitting form data:', formData);
+    
     toast({
-      title: "Landing Page Gerada! ✨",
-      description: "Sua página está sendo criada com IA. Aguarde alguns segundos...",
+      title: "Gerando Landing Page... ✨",
+      description: "Nossa IA está criando sua página personalizada. Aguarde alguns segundos...",
     });
-    onComplete(formData);
+
+    // Simular processamento da IA
+    setTimeout(() => {
+      const generatedPage = generateLandingPage(formData);
+      
+      toast({
+        title: "Landing Page Criada! 🎉",
+        description: "Sua página está pronta! Visualize o resultado e baixe os arquivos.",
+      });
+
+      onComplete(formData, generatedPage);
+    }, 2000);
   };
 
   const isStepValid = () => {

@@ -3,17 +3,21 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowDown, ArrowUp, Zap, Globe, Download, Share2, Sparkles, CheckCircle, Users, TrendingUp } from "lucide-react";
+import { ArrowDown, Zap, Globe, Download, Share2, Sparkles, Users, TrendingUp } from "lucide-react";
 import LandingForm from "@/components/LandingForm";
 import PricingSection from "@/components/PricingSection";
 import FeaturesSection from "@/components/FeaturesSection";
+import PagePreview from "@/components/PagePreview";
 
 const Index = () => {
   const [showForm, setShowForm] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [formData, setFormData] = useState(null);
+  const [generatedPage, setGeneratedPage] = useState(null);
 
   const handleStartClick = () => {
     setShowForm(true);
+    setShowPreview(false);
     // Scroll to form
     setTimeout(() => {
       document.getElementById('form-section')?.scrollIntoView({ 
@@ -22,10 +26,29 @@ const Index = () => {
     }, 100);
   };
 
-  const handleFormComplete = (data: any) => {
+  const handleFormComplete = (data: any, generated: any) => {
     setFormData(data);
+    setGeneratedPage(generated);
+    setShowPreview(true);
+    setShowForm(false);
     console.log('Form completed with data:', data);
   };
+
+  const handleBackToForm = () => {
+    setShowPreview(false);
+    setShowForm(true);
+  };
+
+  // Se estiver na tela de preview, mostrar apenas ela
+  if (showPreview && generatedPage && formData) {
+    return (
+      <PagePreview
+        generatedPage={generatedPage}
+        formData={formData}
+        onBack={handleBackToForm}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">

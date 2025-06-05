@@ -1,10 +1,14 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { CheckCircle, Star, Zap, Crown } from "lucide-react";
 
 const PricingSection = () => {
+  const [isAnnual, setIsAnnual] = useState(false);
+
   const plans = [
     {
       name: "Gratuito",
@@ -26,9 +30,9 @@ const PricingSection = () => {
     },
     {
       name: "Pro",
-      price: "R$ 29",
-      period: "/mês",
-      yearlyPrice: "R$ 290/ano",
+      price: isAnnual ? "R$ 290" : "R$ 29",
+      period: isAnnual ? "/ano" : "/mês",
+      yearlyDiscount: isAnnual ? "economize 17%" : null,
       description: "Para quem quer crescer sem limites",
       features: [
         "Landing pages ilimitadas",
@@ -62,9 +66,31 @@ const PricingSection = () => {
           <h2 className="text-4xl font-bold text-gray-800 mb-4">
             Preços Simples e Transparentes
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Comece grátis e evolua conforme sua necessidade. Sem pegadinhas, sem taxas escondidas.
           </p>
+          
+          {/* Payment Switch */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <span className={`text-lg font-medium transition-colors ${!isAnnual ? 'text-blue-600' : 'text-gray-500'}`}>
+              Mensal
+            </span>
+            <div className="relative">
+              <Switch
+                checked={isAnnual}
+                onCheckedChange={setIsAnnual}
+                className="data-[state=checked]:bg-green-600"
+              />
+            </div>
+            <span className={`text-lg font-medium transition-colors ${isAnnual ? 'text-green-600' : 'text-gray-500'}`}>
+              Anual
+            </span>
+            {isAnnual && (
+              <Badge variant="secondary" className="bg-green-100 text-green-700 animate-pulse">
+                17% OFF
+              </Badge>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -95,10 +121,10 @@ const PricingSection = () => {
                 <div className="mt-4">
                   <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
                   <span className="text-gray-600">{plan.period}</span>
-                  {plan.yearlyPrice && (
+                  {plan.yearlyDiscount && (
                     <div className="mt-2">
                       <Badge variant="secondary" className="bg-green-100 text-green-700">
-                        {plan.yearlyPrice} - economize 17%
+                        {plan.yearlyDiscount}
                       </Badge>
                     </div>
                   )}
@@ -118,26 +144,17 @@ const PricingSection = () => {
                 </ul>
                 
                 {plan.paymentUrls ? (
-                  <div className="space-y-3">
-                    <Button 
-                      onClick={() => handlePayment(plan.paymentUrls.monthly)}
-                      variant={plan.buttonVariant}
-                      className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
-                        plan.popular 
-                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105' 
-                          : 'border-2 border-blue-200 text-blue-600 hover:bg-blue-50'
-                      }`}
-                    >
-                      Pagar Mensalmente - R$ 29
-                    </Button>
-                    <Button 
-                      onClick={() => handlePayment(plan.paymentUrls.yearly)}
-                      variant="outline"
-                      className="w-full py-3 text-lg font-semibold border-2 border-green-500 text-green-600 hover:bg-green-50 transition-all duration-300"
-                    >
-                      Pagar Anualmente - R$ 290
-                    </Button>
-                  </div>
+                  <Button 
+                    onClick={() => handlePayment(isAnnual ? plan.paymentUrls.yearly : plan.paymentUrls.monthly)}
+                    variant={plan.buttonVariant}
+                    className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
+                      plan.popular 
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105' 
+                        : 'border-2 border-blue-200 text-blue-600 hover:bg-blue-50'
+                    }`}
+                  >
+                    {plan.buttonText}
+                  </Button>
                 ) : (
                   <Button 
                     variant={plan.buttonVariant}
