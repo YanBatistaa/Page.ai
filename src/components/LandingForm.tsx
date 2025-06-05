@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, ArrowRight, CheckCircle, Sparkles, Plus, Trash2 } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ArrowLeft, ArrowRight, CheckCircle, Sparkles, Plus, Trash2, Zap, Eye, MousePointer } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { generateLandingPage } from "@/utils/pageGenerator";
 
@@ -25,6 +25,14 @@ interface FormData {
   style: string;
   layout: string;
   animations: boolean;
+  animationLevel: 'subtle' | 'moderate' | 'dynamic';
+  interactiveFeatures: {
+    carousel: boolean;
+    lightbox: boolean;
+    parallax: boolean;
+    counters: boolean;
+    microInteractions: boolean;
+  };
   optionalSections: {
     testimonials: boolean;
     faq: boolean;
@@ -59,6 +67,14 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
     style: '',
     layout: 'centered',
     animations: true,
+    animationLevel: 'moderate',
+    interactiveFeatures: {
+      carousel: false,
+      lightbox: false,
+      parallax: false,
+      counters: false,
+      microInteractions: true
+    },
     optionalSections: {
       testimonials: false,
       faq: false,
@@ -76,7 +92,7 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
     }
   });
 
-  const totalSteps = 9;
+  const totalSteps = 11;
   const progress = ((currentStep + 1) / totalSteps) * 100;
 
   const updateFormData = (field: keyof FormData, value: any) => {
@@ -138,8 +154,8 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
     console.log('Submitting form data:', formData);
     
     toast({
-      title: "Gerando Landing Page... ✨",
-      description: "Nossa IA está criando sua página personalizada. Aguarde alguns segundos...",
+      title: "Gerando Landing Page Avançada... ✨",
+      description: "Nossa IA está criando sua página com animações e interações personalizadas. Aguarde alguns segundos...",
     });
 
     setTimeout(() => {
@@ -147,11 +163,11 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
       
       toast({
         title: "Landing Page Criada! 🎉",
-        description: "Sua página está pronta! Visualize o resultado e baixe os arquivos.",
+        description: "Sua página profissional está pronta com todas as funcionalidades solicitadas!",
       });
 
       onComplete(formData, generatedPage);
-    }, 2000);
+    }, 3000);
   };
 
   const isStepValid = () => {
@@ -162,9 +178,11 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
       case 3: return formData.callToAction.trim() !== '';
       case 4: return formData.ctaLink.trim() !== '';
       case 5: return true; // Optional sections
-      case 6: return true; // Testimonials (optional)
-      case 7: return true; // FAQ (optional)
-      case 8: return formData.style !== '';
+      case 6: return true; // Animations
+      case 7: return true; // Interactive features
+      case 8: return true; // Testimonials
+      case 9: return true; // FAQ
+      case 10: return formData.style !== '';
       default: return false;
     }
   };
@@ -335,16 +353,161 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
               </div>
             </div>
           </div>
-          
-          <div className="border-t pt-6">
-            <div className="flex items-center justify-between">
+        </div>
+      )
+    },
+    {
+      title: "Animações e Efeitos",
+      description: "Configure as animações da sua página",
+      content: (
+        <div className="space-y-6">
+          <div className="border-b pb-6">
+            <div className="flex items-center justify-between mb-4">
               <Label className="text-lg font-medium">Ativar animações</Label>
               <Switch 
                 checked={formData.animations}
                 onCheckedChange={(checked) => updateFormData('animations', checked)}
               />
             </div>
-            <p className="text-sm text-gray-600 mt-2">Adiciona efeitos visuais à página</p>
+            <p className="text-sm text-gray-600">Adiciona efeitos visuais à página</p>
+          </div>
+          
+          {formData.animations && (
+            <div className="space-y-4">
+              <Label className="text-lg font-medium">Intensidade das animações:</Label>
+              <RadioGroup 
+                value={formData.animationLevel} 
+                onValueChange={(value) => updateFormData('animationLevel', value)}
+                className="grid grid-cols-1 gap-3"
+              >
+                <div className="flex items-center space-x-3 p-4 border rounded-lg">
+                  <RadioGroupItem value="subtle" id="subtle" />
+                  <div>
+                    <Label htmlFor="subtle" className="font-medium">Sutil</Label>
+                    <p className="text-sm text-gray-600">Animações discretas e elegantes</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3 p-4 border rounded-lg">
+                  <RadioGroupItem value="moderate" id="moderate" />
+                  <div>
+                    <Label htmlFor="moderate" className="font-medium">Moderado</Label>
+                    <p className="text-sm text-gray-600">Equilíbrio entre impacto e profissionalismo</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3 p-4 border rounded-lg">
+                  <RadioGroupItem value="dynamic" id="dynamic" />
+                  <div>
+                    <Label htmlFor="dynamic" className="font-medium">Dinâmico</Label>
+                    <p className="text-sm text-gray-600">Animações chamativas e impactantes</p>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
+          )}
+        </div>
+      )
+    },
+    {
+      title: "Funcionalidades Interativas",
+      description: "Adicione recursos avançados à sua página",
+      content: (
+        <div className="space-y-6">
+          <Label className="text-lg font-medium">
+            Escolha as funcionalidades interativas:
+          </Label>
+          
+          <div className="grid grid-cols-1 gap-4">
+            <div className="flex items-center space-x-3 p-4 border rounded-lg">
+              <Checkbox 
+                checked={formData.interactiveFeatures.carousel}
+                onCheckedChange={(checked) => 
+                  updateFormData('interactiveFeatures', {
+                    ...formData.interactiveFeatures, 
+                    carousel: checked
+                  })
+                }
+              />
+              <div>
+                <Label className="font-medium flex items-center gap-2">
+                  <Eye className="w-4 h-4" />
+                  Carrossel de Depoimentos
+                </Label>
+                <p className="text-sm text-gray-600">Navegação automática pelos depoimentos</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3 p-4 border rounded-lg">
+              <Checkbox 
+                checked={formData.interactiveFeatures.lightbox}
+                onCheckedChange={(checked) => 
+                  updateFormData('interactiveFeatures', {
+                    ...formData.interactiveFeatures, 
+                    lightbox: checked
+                  })
+                }
+              />
+              <div>
+                <Label className="font-medium flex items-center gap-2">
+                  <Zap className="w-4 h-4" />
+                  Galeria com Lightbox
+                </Label>
+                <p className="text-sm text-gray-600">Visualização ampliada das imagens</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3 p-4 border rounded-lg">
+              <Checkbox 
+                checked={formData.interactiveFeatures.parallax}
+                onCheckedChange={(checked) => 
+                  updateFormData('interactiveFeatures', {
+                    ...formData.interactiveFeatures, 
+                    parallax: checked
+                  })
+                }
+              />
+              <div>
+                <Label className="font-medium flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  Efeito Parallax
+                </Label>
+                <p className="text-sm text-gray-600">Movimento sutil dos elementos no scroll</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3 p-4 border rounded-lg">
+              <Checkbox 
+                checked={formData.interactiveFeatures.counters}
+                onCheckedChange={(checked) => 
+                  updateFormData('interactiveFeatures', {
+                    ...formData.interactiveFeatures, 
+                    counters: checked
+                  })
+                }
+              />
+              <div>
+                <Label className="font-medium">Contadores Animados</Label>
+                <p className="text-sm text-gray-600">Números que crescem ao aparecer na tela</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3 p-4 border rounded-lg">
+              <Checkbox 
+                checked={formData.interactiveFeatures.microInteractions}
+                onCheckedChange={(checked) => 
+                  updateFormData('interactiveFeatures', {
+                    ...formData.interactiveFeatures, 
+                    microInteractions: checked
+                  })
+                }
+              />
+              <div>
+                <Label className="font-medium flex items-center gap-2">
+                  <MousePointer className="w-4 h-4" />
+                  Microinterações
+                </Label>
+                <p className="text-sm text-gray-600">Efeitos ao passar o mouse nos elementos</p>
+              </div>
+            </div>
           </div>
         </div>
       )
@@ -532,7 +695,7 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
         </CardHeader>
         
         <CardContent className="p-8">
-          <div className="min-h-[300px]">
+          <div className="min-h-[350px]">
             {steps[currentStep].content}
           </div>
           
@@ -554,7 +717,7 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-3 text-white font-semibold"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                Gerar Landing Page
+                Gerar Landing Page Avançada
               </Button>
             ) : (
               <Button
