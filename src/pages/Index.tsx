@@ -27,11 +27,11 @@ const Index = () => {
   };
 
   const handleFormComplete = (data: any, generated: any) => {
+    console.log('Form completed with enhanced data:', data);
     setFormData(data);
     setGeneratedPage(generated);
     setShowPreview(true);
     setShowForm(false);
-    console.log('Form completed with data:', data);
   };
 
   const handleBackToForm = () => {
@@ -59,7 +59,7 @@ const Index = () => {
           <div className="text-center max-w-4xl mx-auto">
             <Badge variant="secondary" className="mb-6 bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors">
               <Sparkles className="w-4 h-4 mr-2" />
-              Gerador de Landing Pages com IA
+              Gerador de Landing Pages com IA Avançada
             </Badge>
             
             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-6 leading-tight">
@@ -67,8 +67,8 @@ const Index = () => {
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-              Crie <span className="font-semibold text-blue-600">landing pages profissionais</span> em minutos.<br />
-              Sem programar, sem designer. Apenas 7 perguntas rápidas.
+              Crie <span className="font-semibold text-blue-600">landing pages profissionais</span> com animações, seções personalizadas e JavaScript interativo.<br />
+              Sem programar, sem designer. Apenas algumas perguntas inteligentes.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -91,19 +91,23 @@ const Index = () => {
               </Button>
             </div>
 
-            {/* Quick stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+            {/* Enhanced stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600 mb-2">2 min</div>
-                <div className="text-sm text-gray-600">Tempo médio de criação</div>
+                <div className="text-sm text-gray-600">Tempo médio</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">1000+</div>
-                <div className="text-sm text-gray-600">Páginas criadas</div>
+                <div className="text-3xl font-bold text-purple-600 mb-2">15+</div>
+                <div className="text-sm text-gray-600">Seções disponíveis</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-indigo-600 mb-2">4.9★</div>
-                <div className="text-sm text-gray-600">Avaliação dos usuários</div>
+                <div className="text-3xl font-bold text-indigo-600 mb-2">JS</div>
+                <div className="text-sm text-gray-600">Animações incluídas</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-emerald-600 mb-2">100%</div>
+                <div className="text-sm text-gray-600">Responsivo</div>
               </div>
             </div>
           </div>
@@ -115,47 +119,51 @@ const Index = () => {
         </div>
       </header>
 
-      {/* How it works section */}
+      {/* Enhanced How it works section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Como Funciona
+              Como Funciona - Agora Ainda Melhor
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Em apenas 4 passos simples, sua landing page estará pronta para converter visitantes em clientes
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Agora com seções opcionais, animações JavaScript, upload de imagens e layouts personalizáveis para páginas ainda mais profissionais
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {[
               {
                 step: "01",
-                title: "Responda 7 Perguntas",
-                description: "Conte-nos sobre seu produto, benefícios e público-alvo",
+                title: "Configure Sua Página",
+                description: "Escolha seções opcionais, animações e layouts personalizados",
                 icon: <Users className="w-8 h-8" />,
-                color: "blue"
+                color: "blue",
+                features: ["Depoimentos", "FAQ", "Galeria", "Animações JS"]
               },
               {
                 step: "02", 
-                title: "IA Gera sua Página",
-                description: "Nossa IA cria copy persuasiva e design profissional",
+                title: "IA Gera com Estilo",
+                description: "Nossa IA cria HTML, CSS e JavaScript profissionais",
                 icon: <Sparkles className="w-8 h-8" />,
-                color: "purple"
+                color: "purple",
+                features: ["CSS Avançado", "JS Interativo", "Responsivo", "SEO Ready"]
               },
               {
                 step: "03",
-                title: "Preview em Tempo Real",
-                description: "Visualize e aprove sua landing page antes de publicar",
+                title: "Adicione Suas Imagens",
+                description: "Upload de imagens e regeneração instantânea da página",
                 icon: <Globe className="w-8 h-8" />,
-                color: "indigo"
+                color: "indigo",
+                features: ["Upload Fácil", "Preview Imediato", "Otimização", "Multi-formato"]
               },
               {
                 step: "04",
-                title: "Baixe ou Compartilhe",
-                description: "Receba o código ou um link para usar imediatamente",
+                title: "Publique Profissionalmente",
+                description: "Baixe todos os arquivos ou publique com um clique",
                 icon: <Download className="w-8 h-8" />,
-                color: "emerald"
+                color: "emerald",
+                features: ["HTML + CSS + JS", "Links Públicos", "Domínio Custom", "Analytics"]
               }
             ].map((item, index) => (
               <Card key={index} className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
@@ -169,9 +177,16 @@ const Index = () => {
                   <h3 className="text-xl font-semibold text-gray-800 mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
+                  <p className="text-gray-600 text-sm leading-relaxed mb-4">
                     {item.description}
                   </p>
+                  <div className="space-y-1">
+                    {item.features.map((feature, idx) => (
+                      <div key={idx} className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -188,10 +203,10 @@ const Index = () => {
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                Vamos Criar Sua Landing Page
+                Vamos Criar Sua Landing Page Profissional
               </h2>
               <p className="text-xl text-gray-600">
-                Responda essas 7 perguntas rápidas e veja a mágica acontecer
+                Agora com mais opções e funcionalidades avançadas
               </p>
             </div>
             <LandingForm onComplete={handleFormComplete} />
@@ -202,15 +217,21 @@ const Index = () => {
       {/* Pricing Section */}
       <PricingSection />
 
-      {/* CTA Section */}
+      {/* Enhanced CTA Section */}
       <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-6">
-            Pronto para Criar sua Primeira Landing Page?
+            Pronto para Criar Landing Pages Profissionais?
           </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Junte-se a milhares de empreendedores que já usam o Page.ai para gerar páginas que convertem
+          <p className="text-xl mb-4 opacity-90 max-w-3xl mx-auto">
+            Agora com JavaScript interativo, seções personalizáveis, upload de imagens e muito mais
           </p>
+          <div className="flex flex-wrap justify-center gap-4 mb-8 text-sm">
+            <span className="bg-white/20 px-3 py-1 rounded-full">✨ Animações JavaScript</span>
+            <span className="bg-white/20 px-3 py-1 rounded-full">📱 100% Responsivo</span>
+            <span className="bg-white/20 px-3 py-1 rounded-full">🖼️ Upload de Imagens</span>
+            <span className="bg-white/20 px-3 py-1 rounded-full">⚡ Super Rápido</span>
+          </div>
           <Button 
             onClick={handleStartClick}
             size="lg" 

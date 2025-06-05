@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowLeft, ArrowRight, CheckCircle, Sparkles, Plus, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { generateLandingPage } from "@/utils/pageGenerator";
 
@@ -20,6 +23,23 @@ interface FormData {
   contactInfo: string;
   image: string;
   style: string;
+  layout: string;
+  animations: boolean;
+  optionalSections: {
+    testimonials: boolean;
+    faq: boolean;
+    gallery: boolean;
+    pricing: boolean;
+  };
+  testimonials: Array<{ text: string; name: string; role: string }>;
+  faq: Array<{ question: string; answer: string }>;
+  gallery: string[];
+  customColors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+  };
 }
 
 interface LandingFormProps {
@@ -36,10 +56,27 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
     ctaLink: '',
     contactInfo: '',
     image: '',
-    style: ''
+    style: '',
+    layout: 'centered',
+    animations: true,
+    optionalSections: {
+      testimonials: false,
+      faq: false,
+      gallery: false,
+      pricing: false
+    },
+    testimonials: [{ text: '', name: '', role: '' }],
+    faq: [{ question: '', answer: '' }],
+    gallery: [''],
+    customColors: {
+      primary: '',
+      secondary: '',
+      accent: '',
+      background: ''
+    }
   });
 
-  const totalSteps = 7;
+  const totalSteps = 9;
   const progress = ((currentStep + 1) / totalSteps) * 100;
 
   const updateFormData = (field: keyof FormData, value: any) => {
@@ -53,6 +90,36 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
     const newBenefits = [...formData.benefits];
     newBenefits[index] = value;
     updateFormData('benefits', newBenefits);
+  };
+
+  const addTestimonial = () => {
+    updateFormData('testimonials', [...formData.testimonials, { text: '', name: '', role: '' }]);
+  };
+
+  const removeTestimonial = (index: number) => {
+    const newTestimonials = formData.testimonials.filter((_, i) => i !== index);
+    updateFormData('testimonials', newTestimonials);
+  };
+
+  const updateTestimonial = (index: number, field: string, value: string) => {
+    const newTestimonials = [...formData.testimonials];
+    newTestimonials[index] = { ...newTestimonials[index], [field]: value };
+    updateFormData('testimonials', newTestimonials);
+  };
+
+  const addFAQ = () => {
+    updateFormData('faq', [...formData.faq, { question: '', answer: '' }]);
+  };
+
+  const removeFAQ = (index: number) => {
+    const newFAQ = formData.faq.filter((_, i) => i !== index);
+    updateFormData('faq', newFAQ);
+  };
+
+  const updateFAQ = (index: number, field: string, value: string) => {
+    const newFAQ = [...formData.faq];
+    newFAQ[index] = { ...newFAQ[index], [field]: value };
+    updateFormData('faq', newFAQ);
   };
 
   const nextStep = () => {
@@ -75,7 +142,6 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
       description: "Nossa IA está criando sua página personalizada. Aguarde alguns segundos...",
     });
 
-    // Simular processamento da IA
     setTimeout(() => {
       const generatedPage = generateLandingPage(formData);
       
@@ -95,8 +161,10 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
       case 2: return formData.benefits.some(benefit => benefit.trim() !== '');
       case 3: return formData.callToAction.trim() !== '';
       case 4: return formData.ctaLink.trim() !== '';
-      case 5: return true; // Optional field
-      case 6: return formData.style !== '';
+      case 5: return true; // Optional sections
+      case 6: return true; // Testimonials (optional)
+      case 7: return true; // FAQ (optional)
+      case 8: return formData.style !== '';
       default: return false;
     }
   };
@@ -196,46 +264,249 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
             onChange={(e) => updateFormData('ctaLink', e.target.value)}
             className="text-lg p-4 border-2 focus:border-blue-500 transition-colors"
           />
+          
+          <div className="mt-6 space-y-4">
+            <Label className="text-lg font-medium">Informações de contato (opcional):</Label>
+            <Input
+              placeholder="Ex: (11) 99999-9999 ou contato@email.com"
+              value={formData.contactInfo}
+              onChange={(e) => updateFormData('contactInfo', e.target.value)}
+              className="text-lg p-4 border-2 focus:border-blue-500 transition-colors"
+            />
+          </div>
         </div>
       )
     },
     {
-      title: "Contato",
-      description: "Como as pessoas podem te contatar?",
+      title: "Seções Opcionais",
+      description: "Quais seções extras você quer incluir?",
       content: (
-        <div className="space-y-4">
-          <Label htmlFor="contactInfo" className="text-lg font-medium">
-            Deseja incluir seu WhatsApp ou e-mail de contato? (opcional)
+        <div className="space-y-6">
+          <Label className="text-lg font-medium">
+            Escolha as seções que deseja incluir:
           </Label>
-          <Input
-            id="contactInfo"
-            placeholder="Ex: (11) 99999-9999 ou contato@email.com"
-            value={formData.contactInfo}
-            onChange={(e) => updateFormData('contactInfo', e.target.value)}
-            className="text-lg p-4 border-2 focus:border-blue-500 transition-colors"
-          />
+          
+          <div className="grid grid-cols-1 gap-4">
+            <div className="flex items-center space-x-3 p-4 border rounded-lg">
+              <Checkbox 
+                checked={formData.optionalSections.testimonials}
+                onCheckedChange={(checked) => 
+                  updateFormData('optionalSections', {
+                    ...formData.optionalSections, 
+                    testimonials: checked
+                  })
+                }
+              />
+              <div>
+                <Label className="font-medium">Depoimentos</Label>
+                <p className="text-sm text-gray-600">Mostre o que seus clientes dizem</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3 p-4 border rounded-lg">
+              <Checkbox 
+                checked={formData.optionalSections.faq}
+                onCheckedChange={(checked) => 
+                  updateFormData('optionalSections', {
+                    ...formData.optionalSections, 
+                    faq: checked
+                  })
+                }
+              />
+              <div>
+                <Label className="font-medium">Perguntas Frequentes</Label>
+                <p className="text-sm text-gray-600">Esclareça dúvidas comuns</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3 p-4 border rounded-lg">
+              <Checkbox 
+                checked={formData.optionalSections.gallery}
+                onCheckedChange={(checked) => 
+                  updateFormData('optionalSections', {
+                    ...formData.optionalSections, 
+                    gallery: checked
+                  })
+                }
+              />
+              <div>
+                <Label className="font-medium">Galeria de Imagens</Label>
+                <p className="text-sm text-gray-600">Exiba fotos dos seus produtos</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t pt-6">
+            <div className="flex items-center justify-between">
+              <Label className="text-lg font-medium">Ativar animações</Label>
+              <Switch 
+                checked={formData.animations}
+                onCheckedChange={(checked) => updateFormData('animations', checked)}
+              />
+            </div>
+            <p className="text-sm text-gray-600 mt-2">Adiciona efeitos visuais à página</p>
+          </div>
         </div>
       )
     },
     {
-      title: "Estilo",
-      description: "Qual visual combina com sua marca?",
-      content: (
+      title: "Depoimentos",
+      description: "Configure os depoimentos dos clientes",
+      content: formData.optionalSections.testimonials ? (
         <div className="space-y-4">
           <Label className="text-lg font-medium">
-            Escolha o estilo da página:
+            Adicione depoimentos dos seus clientes:
           </Label>
-          <Select onValueChange={(value) => updateFormData('style', value)} value={formData.style}>
-            <SelectTrigger className="text-lg p-4 border-2 focus:border-blue-500 transition-colors">
-              <SelectValue placeholder="Selecione um estilo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="minimalista">🎯 Minimalista - Limpo e direto</SelectItem>
-              <SelectItem value="colorido">🌈 Colorido - Vibrante e alegre</SelectItem>
-              <SelectItem value="profissional">💼 Profissional - Sério e confiável</SelectItem>
-              <SelectItem value="divertido">🎉 Divertido - Descontraído e criativo</SelectItem>
-            </SelectContent>
-          </Select>
+          
+          {formData.testimonials.map((testimonial, index) => (
+            <Card key={index} className="p-4">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label>Depoimento {index + 1}</Label>
+                  {formData.testimonials.length > 1 && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => removeTestimonial(index)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+                
+                <Textarea
+                  placeholder="Digite o depoimento..."
+                  value={testimonial.text}
+                  onChange={(e) => updateTestimonial(index, 'text', e.target.value)}
+                  className="min-h-[80px]"
+                />
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <Input
+                    placeholder="Nome do cliente"
+                    value={testimonial.name}
+                    onChange={(e) => updateTestimonial(index, 'name', e.target.value)}
+                  />
+                  <Input
+                    placeholder="Cargo/Empresa"
+                    value={testimonial.role}
+                    onChange={(e) => updateTestimonial(index, 'role', e.target.value)}
+                  />
+                </div>
+              </div>
+            </Card>
+          ))}
+          
+          <Button 
+            variant="outline" 
+            onClick={addTestimonial}
+            className="w-full"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Adicionar Depoimento
+          </Button>
+        </div>
+      ) : (
+        <div className="text-center py-8">
+          <p className="text-gray-600">Seção de depoimentos não selecionada.</p>
+          <p className="text-sm text-gray-500">Volte para ativar esta seção.</p>
+        </div>
+      )
+    },
+    {
+      title: "Perguntas Frequentes",
+      description: "Configure as perguntas e respostas",
+      content: formData.optionalSections.faq ? (
+        <div className="space-y-4">
+          <Label className="text-lg font-medium">
+            Adicione perguntas frequentes:
+          </Label>
+          
+          {formData.faq.map((item, index) => (
+            <Card key={index} className="p-4">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label>FAQ {index + 1}</Label>
+                  {formData.faq.length > 1 && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => removeFAQ(index)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </div>
+                
+                <Input
+                  placeholder="Digite a pergunta..."
+                  value={item.question}
+                  onChange={(e) => updateFAQ(index, 'question', e.target.value)}
+                />
+                
+                <Textarea
+                  placeholder="Digite a resposta..."
+                  value={item.answer}
+                  onChange={(e) => updateFAQ(index, 'answer', e.target.value)}
+                  className="min-h-[80px]"
+                />
+              </div>
+            </Card>
+          ))}
+          
+          <Button 
+            variant="outline" 
+            onClick={addFAQ}
+            className="w-full"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Adicionar Pergunta
+          </Button>
+        </div>
+      ) : (
+        <div className="text-center py-8">
+          <p className="text-gray-600">Seção de FAQ não selecionada.</p>
+          <p className="text-sm text-gray-500">Volte para ativar esta seção.</p>
+        </div>
+      )
+    },
+    {
+      title: "Estilo e Layout",
+      description: "Qual visual combina com sua marca?",
+      content: (
+        <div className="space-y-6">
+          <div>
+            <Label className="text-lg font-medium">
+              Escolha o estilo da página:
+            </Label>
+            <Select onValueChange={(value) => updateFormData('style', value)} value={formData.style}>
+              <SelectTrigger className="text-lg p-4 border-2 focus:border-blue-500 transition-colors mt-2">
+                <SelectValue placeholder="Selecione um estilo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="minimalista">🎯 Minimalista - Limpo e direto</SelectItem>
+                <SelectItem value="colorido">🌈 Colorido - Vibrante e alegre</SelectItem>
+                <SelectItem value="profissional">💼 Profissional - Sério e confiável</SelectItem>
+                <SelectItem value="divertido">🎉 Divertido - Descontraído e criativo</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Label className="text-lg font-medium">
+              Escolha o layout da seção principal:
+            </Label>
+            <Select onValueChange={(value) => updateFormData('layout', value)} value={formData.layout}>
+              <SelectTrigger className="text-lg p-4 border-2 focus:border-blue-500 transition-colors mt-2">
+                <SelectValue placeholder="Selecione um layout" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="centered">📄 Centralizado - Texto no centro</SelectItem>
+                <SelectItem value="split">📊 Dividido - Texto e imagem lado a lado</SelectItem>
+                <SelectItem value="fullwidth">🖼️ Largura total - Com fundo colorido</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       )
     }
@@ -261,7 +532,7 @@ const LandingForm = ({ onComplete }: LandingFormProps) => {
         </CardHeader>
         
         <CardContent className="p-8">
-          <div className="min-h-[200px]">
+          <div className="min-h-[300px]">
             {steps[currentStep].content}
           </div>
           
